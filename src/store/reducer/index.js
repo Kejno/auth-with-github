@@ -12,7 +12,7 @@ export const reducer = (state, action) => {
     case "LOGIN": {
       localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
       localStorage.setItem("user", JSON.stringify(action.payload.user))
-      console.log(action.payload.isLoggedIn)
+      console.log("action.payload", action.payload)
       return {
         ...state,
         isLoggedIn: action.payload.isLoggedIn,

@@ -8,13 +8,15 @@ import { AuthContext } from "../App";
 export default function Login() {
   const { state, dispatch } = useContext(AuthContext);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
-
   const { client_id, redirect_uri } = state;
+  console.log('redirect_uri', redirect_uri)
 
   useEffect(() => {
     // After requesting Github access, Github redirects back to your app with a code parameter
     const url = window.location.href;
     const hasCode = url.includes("?code=");
+    console.log("window.location.href", window.location.href)
+    console.log("hasCode", hasCode)
 
     // If Github API returns the code parameter
     if (hasCode) {
@@ -28,9 +30,10 @@ export default function Login() {
         client_secret: state.client_secret,
         code: newUrl[1]
       };
+      console.log("requestData", requestData)
 
       const proxy_url = state.proxy_url;
-
+      console.log("proxy_url", proxy_url)
       // Use code parameter and other parameters to make POST request to proxy_server
       fetch(proxy_url, {
         method: "POST",
@@ -38,6 +41,7 @@ export default function Login() {
       })
         .then(response => response.json())
         .then(data => {
+          console.log("DATA d", data)
           dispatch({
             type: "LOGIN",
             payload: { user: data, isLoggedIn: true }
@@ -60,8 +64,6 @@ export default function Login() {
     <Wrapper>
       <section className="container">
         <div>
-          <h1>Welcome</h1>
-          <span>Super amazing app</span>
           <span>{data.errorMessage}</span>
           <div className="login-container">
             {data.isLoading ? (
@@ -69,22 +71,22 @@ export default function Login() {
                 <div className="loader"></div>
               </div>
             ) : (
-              <>
-                {
-                  // Link to request GitHub access
-                }
-                <a
-                  className="login-link"
-                  href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
-                  onClick={() => {
-                    setData({ ...data, errorMessage: "" });
-                  }}
-                >
-                  <GithubIcon />
-                  <span>Login with GitHub</span>
-                </a>
-              </>
-            )}
+                <>
+                  {
+                    // Link to request GitHub access
+                  }
+                  <a
+                    className="login-link"
+                    href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
+                    onClick={() => {
+                      setData({ ...data, errorMessage: "" });
+                    }}
+                  >
+                    <GithubIcon />
+                    <span>Login with GitHub</span>
+                  </a>
+                </>
+              )}
           </div>
         </div>
       </section>
@@ -106,7 +108,6 @@ const Wrapper = Styled.section`
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
       transition: 0.3s;
       width: 25%;
       height: 45%;
